@@ -29,6 +29,10 @@ async function init() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
 
+    if (navigator.onLine) {
+      navigator.serviceWorker.getRegistration()?.then((r) => r?.update());
+    }
+
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       window.location.reload();
     });
@@ -40,10 +44,6 @@ async function init() {
         }
       }
     });
-
-    setInterval(() => {
-      navigator.serviceWorker.getRegistration()?.then((r) => r?.update());
-    }, 60 * 60 * 1000);
   }
 
   bindInstallPrompt();
