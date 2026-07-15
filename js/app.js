@@ -91,7 +91,21 @@ function bindInputBar() {
   const btn = $('#btnAdd');
   const dateInput = $('#todoDate');
   const timeInput = $('#todoTime');
-  const extras = $('.input-extras');
+  const extras = $('#inputExtras');
+  const toggleDateBtn = $('#btnToggleDate');
+
+  toggleDateBtn.addEventListener('click', () => {
+    extras.classList.toggle('open');
+    toggleDateBtn.classList.toggle('active');
+    if (extras.classList.contains('open')) dateInput.focus();
+  });
+
+  function updateDateIndicator() {
+    toggleDateBtn.classList.toggle('has-date', !!(dateInput.value || timeInput.value));
+  }
+
+  dateInput.addEventListener('change', updateDateIndicator);
+  timeInput.addEventListener('change', updateDateIndicator);
 
   input.addEventListener('input', () => {
     input.style.height = 'auto';
@@ -119,6 +133,8 @@ function bindInputBar() {
     input.style.height = 'auto';
     dateInput.value = '';
     timeInput.value = '';
+    extras.classList.remove('open');
+    toggleDateBtn.classList.remove('active', 'has-date');
 
     render();
     input.focus();

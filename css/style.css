@@ -367,10 +367,14 @@ body {
 }
 
 .input-extras {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 6px;
   margin-top: 8px;
+}
+
+.input-extras.open {
+  display: flex;
 }
 
 .input-date,
@@ -421,6 +425,43 @@ body {
 
 .btn-add:active {
   transform: scale(0.95);
+}
+
+.btn-input-action {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  position: relative;
+}
+
+.btn-input-action:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.btn-input-action.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.btn-input-action.has-date::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 /* === Settings Panel === */
