@@ -27,7 +27,7 @@ async function init() {
   bindKeyboard();
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {});
 
     if (navigator.onLine) {
       navigator.serviceWorker.getRegistration()?.then((r) => r?.update());

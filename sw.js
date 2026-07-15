@@ -1,4 +1,4 @@
-const CACHE_NAME = 'todo-v3';
+const CACHE_NAME = 'todo-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -7,7 +7,8 @@ const ASSETS = [
   './js/db.js',
   './js/ui.js',
   './js/settings.js',
-  './manifest.json'
+  './manifest.json',
+  './icons/icon.svg'
 ];
 
 self.addEventListener('install', (event) => {
@@ -21,16 +22,19 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    ).then(() => self.clients.matchAll())
-    .then((clients) => {
-      clients.forEach((client) => client.postMessage({ type: 'SW_UPDATED' }));
-    })
+    )
   );
   self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    fetch(event.request)
+      .then((response) => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
