@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Todo</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-row">
+        <h1 class="app-title">Todos</h1>
+        <button class="btn-icon" id="btnSettings" aria-label="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="filters">
+        <button class="filter-pill active" data-view="all">All</button>
+        <button class="filter-pill" data-view="today">Today</button>
+        <button class="filter-pill" data-view="week">This Week</button>
+        <button class="filter-pill" data-view="month">This Month</button>
+        <button class="filter-pill" data-view="no-date">No Date</button>
+      </div>
+    </div>
+
+    <!-- Todo List -->
+    <div class="todo-list" id="todoList"></div>
+
+    <!-- Input Bar -->
+    <div class="input-bar">
+      <div class="input-row">
+        <div class="input-field-wrap">
+          <textarea class="input-field" id="todoInput" placeholder="Type a todo..." rows="1"></textarea>
+          <div class="input-extras">
+            <input type="date" class="input-date" id="todoDate">
+            <input type="time" class="input-time" id="todoTime">
+          </div>
+        </div>
+        <button class="btn-add" id="btnAdd" aria-label="Add todo">+</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="edit-overlay" id="editOverlay">
+    <div class="edit-panel">
+      <input type="text" class="input-field" id="editInput" placeholder="Todo text">
+      <div class="input-extras">
+        <input type="date" class="input-date" id="editDate">
+        <input type="time" class="input-time" id="editTime">
+      </div>
+      <div class="edit-actions">
+        <button class="btn-edit-cancel" id="btnEditCancel">Cancel</button>
+        <button class="btn-edit-save" id="btnEditSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Overlay -->
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-panel">
+      <div class="settings-header">
+        <span class="settings-title">Settings</span>
+        <button class="btn-icon" id="btnSettingsClose" aria-label="Close settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Urgency Colors</div>
+        <div class="color-row">
+          <span class="color-label">Today / Overdue</span>
+          <input type="color" class="color-input" id="colorToday" value="#ef4444">
+        </div>
+        <div class="color-row">
+          <span class="color-label">Within 2 days</span>
+          <input type="color" class="color-input" id="colorTwoDays" value="#f97316">
+        </div>
+        <div class="color-row">
+          <span class="color-label">Within 5 days</span>
+          <input type="color" class="color-input" id="colorFiveDays" value="#3b82f6">
+        </div>
+        <div class="color-row">
+          <span class="color-label">6+ days</span>
+          <input type="color" class="color-input" id="colorMoreDays" value="#22c55e">
+        </div>
+        <div class="color-row">
+          <span class="color-label">No due date</span>
+          <input type="color" class="color-input" id="colorNoDate" value="#737373">
+        </div>
+        <div class="color-row">
+          <span class="color-label">Completed</span>
+          <input type="color" class="color-input" id="colorCompleted" value="#525252">
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Default View</div>
+        <select class="settings-select" id="defaultView">
+          <option value="all">All</option>
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+        </select>
+      </div>
+
+      <div class="settings-section">
+        <button class="btn-reset" id="btnResetColors">Reset Colors to Default</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
