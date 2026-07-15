@@ -28,6 +28,48 @@ async function init() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   }
+
+  bindInstallPrompt();
+}
+
+// ── Install Prompt ──
+
+function bindInstallPrompt() {
+  const DISMISSED_KEY = 'todo-install-dismissed';
+  let deferredPrompt = null;
+
+  const banner = $('#installBanner');
+  const installBtn = $('#btnInstall');
+  const dismissBtn = $('#btnInstallDismiss');
+
+  if (localStorage.getItem(DISMISSED_KEY)) return;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    setTimeout(() => banner.classList.add('visible'), 1500);
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    banner.classList.remove('visible');
+    if (outcome === 'accepted') localStorage.setItem(DISMISSED_KEY, '1');
+  });
+
+  dismissBtn.addEventListener('click', () => {
+    localStorage.setItem(DISMISSED_KEY, '1');
+    banner.classList.remove('visible');
+    deferredPrompt = null;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    localStorage.setItem(DISMISSED_KEY, '1');
+    banner.classList.remove('visible');
+    deferredPrompt = null;
+  });
 }
 
 // ── Render ──
