@@ -27,6 +27,22 @@ async function init() {
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
+
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.location.reload();
+    });
+
+    navigator.serviceWorker.addEventListener('message', (e) => {
+      if (e.data?.type === 'SW_UPDATED') {
+        if (confirm('New version available. Reload to update?')) {
+          window.location.reload();
+        }
+      }
+    });
+
+    setInterval(() => {
+      navigator.serviceWorker.getRegistration()?.then((r) => r?.update());
+    }, 60 * 60 * 1000);
   }
 
   bindInstallPrompt();
