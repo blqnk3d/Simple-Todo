@@ -1,13 +1,14 @@
 const CACHE_NAME = 'todo-v1';
+const CACHE_NAME = 'todo-v2';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/js/app.js',
-  '/js/db.js',
-  '/js/ui.js',
-  '/js/settings.js',
-  '/manifest.json'
+  './',
+  './index.html',
+  './css/style.css',
+  './js/app.js',
+  './js/db.js',
+  './js/ui.js',
+  './js/settings.js',
+  './manifest.json'
 ];
 
 self.addEventListener('install', (event) => {

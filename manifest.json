@@ -2,7 +2,7 @@
   "name": "Todo",
   "short_name": "Todo",
   "description": "Simple, fast todo app",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a0a0a",
