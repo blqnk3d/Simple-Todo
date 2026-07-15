@@ -24,6 +24,7 @@ async function init() {
   bindFilters();
   bindSettings();
   bindEditModal();
+  bindKeyboard();
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
@@ -85,6 +86,19 @@ function bindInstallPrompt() {
     localStorage.setItem(DISMISSED_KEY, '1');
     banner.classList.remove('visible');
     deferredPrompt = null;
+  });
+}
+
+// ── Keyboard ──
+
+function bindKeyboard() {
+  if (!window.visualViewport) return;
+
+  const app = $('.app');
+
+  window.visualViewport.addEventListener('resize', () => {
+    const vh = window.visualViewport.height;
+    app.style.height = vh + 'px';
   });
 }
 
