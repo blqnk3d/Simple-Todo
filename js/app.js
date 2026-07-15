@@ -20,7 +20,7 @@ async function init() {
   todos = await db.getAllTodos();
   render();
 
-  bindInputBar();
+  bindCreateModal();
   bindFilters();
   bindSettings();
   bindEditModal();
@@ -32,10 +32,6 @@ async function init() {
     if (navigator.onLine) {
       navigator.serviceWorker.getRegistration()?.then((r) => r?.update());
     }
-
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      window.location.reload();
-    });
 
     navigator.serviceWorker.addEventListener('message', (e) => {
       if (e.data?.type === 'SW_UPDATED') {
@@ -114,42 +110,40 @@ function render() {
   });
 }
 
-// ── Input Bar ──
+// ── Create Todo Modal ──
 
-function bindInputBar() {
+function bindCreateModal() {
+  const overlay = $('#createOverlay');
+  const fab = $('#fabAdd');
   const input = $('#todoInput');
-  const btn = $('#btnAdd');
   const dateInput = $('#todoDate');
   const timeInput = $('#todoTime');
-  const extras = $('#inputExtras');
-  const toggleDateBtn = $('#btnToggleDate');
+  const addBtn = $('#btnAdd');
+  const cancelBtn = $('#btnCreateCancel');
 
-  toggleDateBtn.addEventListener('click', () => {
-    extras.classList.toggle('open');
-    toggleDateBtn.classList.toggle('active');
-    if (extras.classList.contains('open')) dateInput.focus();
+  fab.addEventListener('click', () => {
+    overlay.classList.add('open');
+    input.value = '';
+    dateInput.value = '';
+    timeInput.value = '';
+    setTimeout(() => input.focus(), 100);
   });
 
-  function updateDateIndicator() {
-    toggleDateBtn.classList.toggle('has-date', !!(dateInput.value || timeInput.value));
-  }
+  cancelBtn.addEventListener('click', closeCreateModal);
 
-  dateInput.addEventListener('change', updateDateIndicator);
-  timeInput.addEventListener('change', updateDateIndicator);
-
-  input.addEventListener('input', () => {
-    input.style.height = 'auto';
-    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeCreateModal();
   });
 
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter') {
       e.preventDefault();
       addTodo();
     }
+    if (e.key === 'Escape') closeCreateModal();
   });
 
-  btn.addEventListener('click', addTodo);
+  addBtn.addEventListener('click', addTodo);
 
   function addTodo() {
     const text = input.value.trim();
@@ -160,14 +154,18 @@ function bindInputBar() {
     db.addTodo(todo);
 
     input.value = '';
-    input.style.height = 'auto';
     dateInput.value = '';
     timeInput.value = '';
-    extras.classList.remove('open');
-    toggleDateBtn.classList.remove('active', 'has-date');
 
     render();
-    input.focus();
+    closeCreateModal();
+  }
+
+  function closeCreateModal() {
+    overlay.classList.remove('open');
+    input.value = '';
+    dateInput.value = '';
+    timeInput.value = '';
   }
 }
 

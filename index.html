@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <meta name="theme-color" content="#0a0a0a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Todo</title>
   <link rel="manifest" href="manifest.json">
@@ -38,23 +38,26 @@
     <!-- Todo List -->
     <div class="todo-list" id="todoList"></div>
 
-    <!-- Input Bar -->
-    <div class="input-bar">
-      <div class="input-row">
-        <div class="input-field-wrap">
-          <textarea class="input-field" id="todoInput" placeholder="Type a todo..." rows="1"></textarea>
-        </div>
-        <button class="btn-input-action" id="btnToggleDate" aria-label="Set due date">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-        </button>
-        <button class="btn-add" id="btnAdd" aria-label="Add todo">+</button>
-      </div>
-      <div class="input-extras" id="inputExtras">
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" id="fabAdd" aria-label="Add todo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+  </button>
+
+  <!-- Create Todo Modal -->
+  <div class="create-overlay" id="createOverlay">
+    <div class="create-panel">
+      <input type="text" class="input-field" id="todoInput" placeholder="What needs to be done?">
+      <div class="create-extras">
         <input type="date" class="input-date" id="todoDate">
         <input type="time" class="input-time" id="todoTime">
       </div>
+      <div class="create-actions">
+        <button class="btn-create-cancel" id="btnCreateCancel">Cancel</button>
+        <button class="btn-create-add" id="btnAdd">Add</button>
+      </div>
     </div>
-
   </div>
 
   <!-- Edit Modal -->

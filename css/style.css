@@ -313,26 +313,70 @@ body {
   line-height: 1.5;
 }
 
-/* === Input Bar === */
-.input-bar {
-  flex-shrink: 0;
-  padding: 12px 16px calc(12px + var(--safe-bottom));
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-}
-
-.input-row {
+/* === FAB === */
+.fab {
+  position: fixed;
+  bottom: calc(24px + var(--safe-bottom));
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
   display: flex;
-  align-items: flex-end;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(74, 158, 255, 0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+  z-index: 50;
 }
 
-.input-field-wrap {
-  flex: 1;
-  position: relative;
+.fab:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 28px rgba(74, 158, 255, 0.45);
 }
 
-.input-field {
+.fab:active {
+  transform: scale(0.95);
+}
+
+/* === Create Todo Modal === */
+.create-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.create-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.create-panel {
+  width: 100%;
+  max-width: 400px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 24px;
+  transform: scale(0.95);
+  transition: transform 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.create-overlay.open .create-panel {
+  transform: scale(1);
+}
+
+.create-panel .input-field {
   width: 100%;
   padding: 12px 16px;
   border-radius: var(--radius);
@@ -342,30 +386,22 @@ body {
   font-size: 0.9375rem;
   font-family: inherit;
   outline: none;
-  resize: none;
   transition: border-color 0.15s;
-  min-height: 44px;
-  max-height: 120px;
-  line-height: 1.4;
 }
 
-.input-field::placeholder {
+.create-panel .input-field::placeholder {
   color: var(--text-muted);
 }
 
-.input-field:focus {
+.create-panel .input-field:focus {
   border-color: var(--accent);
 }
 
-.input-extras {
-  display: none;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.input-extras.open {
+.create-extras {
   display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .input-date,
@@ -393,66 +429,45 @@ body {
   filter: invert(0.6);
 }
 
-.btn-add {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius);
+.create-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-create-cancel {
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-create-cancel:hover {
+  background: var(--surface-2);
+}
+
+.btn-create-add {
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
   border: none;
   background: var(--accent);
   color: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  font-size: 1.4rem;
-  font-weight: 700;
-  transition: opacity 0.15s, transform 0.1s;
+  transition: opacity 0.15s;
 }
 
-.btn-add:hover {
+.btn-create-add:hover {
   opacity: 0.85;
-}
-
-.btn-add:active {
-  transform: scale(0.95);
-}
-
-.btn-input-action {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius);
-  border: none;
-  background: var(--surface-2);
-  color: var(--text-dim);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-  position: relative;
-}
-
-.btn-input-action:hover {
-  background: var(--surface-3);
-  color: var(--text);
-}
-
-.btn-input-action.active {
-  background: var(--accent-dim);
-  color: var(--accent);
-}
-
-.btn-input-action.has-date::after {
-  content: '';
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
 }
 
 /* === Settings Panel === */
@@ -789,10 +804,6 @@ body {
 
   .todo-list {
     padding: 4px 24px;
-  }
-
-  .input-bar {
-    padding: 16px 24px;
   }
 
   .todo-actions {
