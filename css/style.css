@@ -810,6 +810,173 @@ body {
   }
 }
 
+/* === Frequency Pills === */
+.freq-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.freq-pill {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  text-align: center;
+}
+
+.freq-pill:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.freq-pill.active {
+  background: var(--accent-dim);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+/* === Recurring Icon + Streak Badge === */
+.todo-repeat-icon {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-right: 4px;
+  color: var(--text-muted);
+}
+
+.todo-item.completed .todo-repeat-icon {
+  opacity: 0.4;
+}
+
+.todo-streak {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.todo-item.completed .todo-streak {
+  opacity: 0.5;
+}
+
+/* === Settings: Check for Update === */
+.btn-check-update {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-check-update:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.btn-check-update:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* === Settings: Recurring List === */
+.recurring-list {
+  max-height: 240px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
+
+.recurring-empty {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 16px 0;
+}
+
+.recurring-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.recurring-row:last-child {
+  border-bottom: none;
+}
+
+.recurring-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.recurring-text {
+  font-size: 0.875rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recurring-freq {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* === Edit Modal: Stop Recurring === */
+.edit-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.edit-actions-right {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.btn-stop-recurring {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--color-today);
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.btn-stop-recurring:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
 /* === Animations === */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

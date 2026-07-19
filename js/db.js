@@ -1,5 +1,5 @@
 const DB_NAME = 'TodoApp';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 let dbInstance = null;
 
@@ -21,6 +21,12 @@ function open() {
 
       if (!db.objectStoreNames.contains('settings')) {
         db.createObjectStore('settings', { keyPath: 'key' });
+      }
+
+      if (!db.objectStoreNames.contains('recurring')) {
+        const store = db.createObjectStore('recurring', { keyPath: 'id' });
+        store.createIndex('frequency', 'frequency', { unique: false });
+        store.createIndex('active', 'active', { unique: false });
       }
     };
 
@@ -48,8 +54,7 @@ function reqToPromise(request) {
 
 async function getAllTodos() {
   const store = await tx('todos', 'readonly');
-  const todos = await reqToPromise(store.getAll());
-  return todos;
+  return reqToPromise(store.getAll());
 }
 
 async function addTodo(todo) {
@@ -64,6 +69,28 @@ async function updateTodo(todo) {
 
 async function deleteTodo(id) {
   const store = await tx('todos', 'readwrite');
+  return reqToPromise(store.delete(id));
+}
+
+// ── Recurring ──
+
+async function getAllRecurring() {
+  const store = await tx('recurring', 'readonly');
+  return reqToPromise(store.getAll());
+}
+
+async function addRecurring(template) {
+  const store = await tx('recurring', 'readwrite');
+  return reqToPromise(store.add(template));
+}
+
+async function updateRecurring(template) {
+  const store = await tx('recurring', 'readwrite');
+  return reqToPromise(store.put(template));
+}
+
+async function deleteRecurring(id) {
+  const store = await tx('recurring', 'readwrite');
   return reqToPromise(store.delete(id));
 }
 
@@ -86,6 +113,10 @@ export default {
   addTodo,
   updateTodo,
   deleteTodo,
+  getAllRecurring,
+  addRecurring,
+  updateRecurring,
+  deleteRecurring,
   getSetting,
   setSetting
 };

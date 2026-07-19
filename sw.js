@@ -1,4 +1,4 @@
-const CACHE_NAME = 'todo-v4';
+const CACHE_NAME = 'todo-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -25,6 +25,12 @@ self.addEventListener('activate', (event) => {
     )
   );
   self.clients.claim();
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('fetch', (event) => {

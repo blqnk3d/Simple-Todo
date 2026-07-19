@@ -50,6 +50,11 @@
   <div class="create-overlay" id="createOverlay">
     <div class="create-panel">
       <input type="text" class="input-field" id="todoInput" placeholder="What needs to be done?">
+      <div class="freq-row">
+        <button class="freq-pill" data-freq="daily">Daily</button>
+        <button class="freq-pill" data-freq="weekly">Weekly</button>
+        <button class="freq-pill" data-freq="monthly">Monthly</button>
+      </div>
       <div class="create-extras">
         <input type="date" class="input-date" id="todoDate">
         <input type="time" class="input-time" id="todoTime">
@@ -70,8 +75,11 @@
         <input type="time" class="input-time" id="editTime">
       </div>
       <div class="edit-actions">
-        <button class="btn-edit-cancel" id="btnEditCancel">Cancel</button>
-        <button class="btn-edit-save" id="btnEditSave">Save</button>
+        <button class="btn-stop-recurring" id="btnStopRecurring" style="display:none">Stop recurring</button>
+        <div class="edit-actions-right">
+          <button class="btn-edit-cancel" id="btnEditCancel">Cancel</button>
+          <button class="btn-edit-save" id="btnEditSave">Save</button>
+        </div>
       </div>
     </div>
   </div>
@@ -126,6 +134,15 @@
 
       <div class="settings-section">
         <button class="btn-reset" id="btnResetColors">Reset Colors to Default</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Recurring Tasks</div>
+        <div id="recurringList" class="recurring-list"></div>
+      </div>
+
+      <div class="settings-section">
+        <button class="btn-check-update" id="btnCheckUpdate">Check for updates</button>
       </div>
     </div>
   </div>
