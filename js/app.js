@@ -64,59 +64,85 @@ function buildRecurringMap() {
 
 async function initRecurring() {
   const today = todayStr();
-  let changed = false;
+  let anyChanged = false;
 
   for (const template of recurringTemplates) {
     if (!template.active) continue;
     if (!template.nextDueDate) continue;
     if (template.nextDueDate > today) continue;
 
-    const existingIncomplete = todos?.find(
-      (t) => t.recurringId === template.id && !t.completed
-    );
-    if (existingIncomplete) continue;
-
-    const newTodo = createTodoObject(template.text, template.nextDueDate, null, template.id);
-    todos.push(newTodo);
-    await db.addTodo(newTodo);
-    changed = true;
-  }
-
-  if (changed && todos.length > 0) {
-    render();
-  }
-}
-
-function updateStreak(template, completedDate) {
-  const grace = getGraceDays(template.frequency);
-
-  if (!template.lastCompletedDate) {
-    template.streak = 1;
-  } else {
-    const lastDate = new Date(template.lastCompletedDate + 'T00:00:00');
-    const completedD = new Date(completedDate + 'T00:00:00');
-    const diffMs = completedD - lastDate;
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-    let expectedGap;
-    if (template.frequency === 'daily') expectedGap = 1;
-    else if (template.frequency === 'weekly') expectedGap = 7;
-    else if (template.frequency === 'monthly') expectedGap = 30;
-    else expectedGap = 1;
-
-    if (diffDays <= expectedGap + grace) {
-      template.streak += 1;
-    } else {
-      template.streak = 1;
+    // Catch up to today if we missed days
+    if (template.nextDueDate < today) {
+      template.nextDueDate = today;
     }
+
+    // Find the one linked todo
+    const todo = todos.find((t) => t.recurringId === template.id);
+
+    if (!todo) {
+      // Todo was deleted — create a fresh one
+      const newTodo = createTodoObject(template.text, template.nextDueDate, null, template.id);
+      todos.push(newTodo);
+      await db.addTodo(newTodo);
+    } else if (todo.completed) {
+      // Completed — evaluate streak, then reset in place
+      const gap = template.lastCompletedDate
+        ? daysBetween(template.lastCompletedDate, today)
+        : null;
+      const expected = freqToGap(template.frequency);
+      const grace = getGraceDays(template.frequency);
+
+      if (gap === null) {
+        template.streak = 1;
+      } else if (gap <= expected + grace) {
+        template.streak = (template.streak || 0) + 1;
+      } else {
+        template.streak = 1;
+      }
+
+      template.lastCompletedDate = today;
+
+      // Reset todo in place
+      todo.completed = false;
+      todo.completedAt = null;
+      todo.dueDate = template.nextDueDate;
+      todo.updatedAt = new Date().toISOString();
+      await db.updateTodo(todo);
+    } else {
+      // Not completed — streak breaks
+      template.streak = 0;
+      template.lastCompletedDate = null;
+
+      // Update dueDate so it stays current
+      todo.dueDate = template.nextDueDate;
+      todo.updatedAt = new Date().toISOString();
+      await db.updateTodo(todo);
+    }
+
+    // Advance next period
+    template.nextDueDate = getNextDueDate(template.nextDueDate, template.frequency);
+    await db.updateRecurring(template);
+    anyChanged = true;
   }
 
-  template.lastCompletedDate = completedDate;
-  template.nextDueDate = getNextDueDate(completedDate, template.frequency);
+  if (anyChanged) render();
 }
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function daysBetween(a, b) {
+  const da = new Date(a + 'T00:00:00');
+  const db = new Date(b + 'T00:00:00');
+  return Math.round((db - da) / (1000 * 60 * 60 * 24));
+}
+
+function freqToGap(freq) {
+  if (freq === 'daily') return 1;
+  if (freq === 'weekly') return 7;
+  if (freq === 'monthly') return 30;
+  return 1;
 }
 
 // ── Render ──
@@ -251,14 +277,6 @@ async function toggleTodo(id) {
   todo.completed = !todo.completed;
   todo.completedAt = todo.completed ? new Date().toISOString() : null;
   todo.updatedAt = new Date().toISOString();
-
-  if (todo.completed && todo.recurringId) {
-    const template = recurringMap[todo.recurringId];
-    if (template) {
-      updateStreak(template, todayStr());
-      await db.updateRecurring(template);
-    }
-  }
 
   await db.updateTodo(todo);
   render();
