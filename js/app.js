@@ -35,8 +35,6 @@ async function init() {
   bindUpdateCheck();
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {});
-
     if (navigator.onLine) {
       navigator.serviceWorker.getRegistration()?.then((r) => r?.update());
     }
